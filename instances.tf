@@ -1,64 +1,44 @@
-########################################################################
-####### ec2 instances permissions specifics to the ECS cluster #########
-########################################################################
-
-# first of all the role is created
-# On AWS, the role is an important part of IAM service (identity and access management).
-# It is used to permit some actions (like access data an S3 bucket or update a docker image on ecr).
-# This permissions are granted without additionnal identity informations, which is very convenient
-# for application running on AWS that have to manipulate AWS resources => no need to share API key.
-# This role can only be assumed by ec2 instance (assume_role_policy)
-resource "aws_iam_role" "ecs" {
-    name = "ecs"
-    assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-}
-
-# then some abilities are attached to the newly created role.
-# this abilities are grouped in policies. Here we refere to an
-# existing policy instead of creating a new one.
-resource "aws_iam_policy_attachment" "ecs_for_ec2" {
-  name = "ecs-for-ec2"
-  roles = ["${aws_iam_role.ecs.id}"]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
-}
-
-########################################################################
-################### EC2 instances description ##########################
-########################################################################
-
-# on this part is described the ec2 instances we want to have on the ecs cluster,
-# the security group and, the scalling policy
-
 # the IAM profile of ec2 instances
-resource "aws_iam_instance_profile" "ecs" {
+# this resource is used to affect a role
+# to the future instances.
+resource "aws_iam_instance_profile" "ecs_instance" {
   name = "ecs-instance"
-  role = "${aws_iam_role.ecs.name}"
+  role = "${aws_iam_role.ecs_instance.name}"
 }
 
-# the configuration used by the auto scaling to
+# the configuration used by the auto scaling group to
 # launch new ecs instances
 resource "aws_launch_configuration" "ecs_instance" {
   name_prefix = "ecs_instance-"
   image_id = "ami-809f84e6"
   instance_type = "t2.micro"
-  iam_instance_profile = "${aws_iam_instance_profile.ecs.id}"
-  user_data = <<USER_DATA
-  #!bin/bash
-  echo ECS_CLUSTER=your_cluster_name >> /etc/ecs/ecs.config
-USER_DATA
+  iam_instance_profile = "${aws_iam_instance_profile.ecs_instance.id}"
+  security_groups = ["${aws_security_group.ecs_cluster.id}"]
+  associate_public_ip_address = true
+  lifecycle = {
+    create_before_destroy = true
+  }
+  user_data = <<EOF
+  #!/bin/bash
+  echo ECS_CLUSTER=ecs-cluster-for-matinale-tech >> /etc/ecs/ecs.config
+EOF
 }
 
+# this is the autoscaling group configuration. An autoscaling group is
+# a logical group of ec2 instance with same configuration. We can scale
+# up or scale down the number of instance, depending on the needs.
+# We choose to use an auto scaling group for this capacity, making
+# easier to run the ec2 instances only when needed, just by changing the
+# desired_capacity and then run 'terraform apply'.
+# In production, you can perform dynamic cluster resizing through
+# cloud watch or custom tools and aws api.
+
+resource "aws_autoscaling_group" "ecs_cluster" {
+  name = "ecs-cluster-autoscaling-group"
+  vpc_zone_identifier = ["${aws_subnet.public_subnet_a.id}","${aws_subnet.public_subnet_b.id}","${aws_subnet.public_subnet_c.id}"]
+  max_size = 6
+  min_size = 0
+  desired_capacity = "${var.desired_capacity}"
+  health_check_type = "EC2"
+  launch_configuration = "${aws_launch_configuration.ecs_instance.id}"
+}

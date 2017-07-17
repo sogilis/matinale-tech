@@ -2,12 +2,12 @@
 
 variable "production_version" {
   type    = "string"
-  default = "1"
+  default = "2.1"
 }
 
 variable "test_version" {
   type    = "string"
-  default = "1"
+  default = "2.1"
 }
 
 variable "nb_production_task" {

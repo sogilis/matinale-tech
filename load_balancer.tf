@@ -75,7 +75,7 @@ resource "aws_alb_listener_rule" "prod" {
 
   condition {
     field  = "path-pattern"
-    values = ["/production/*"]
+    values = ["/production*"]
   }
 }
 
@@ -91,7 +91,7 @@ resource "aws_alb_listener_rule" "test" {
 
   condition {
     field  = "path-pattern"
-    values = ["/test/*"]
+    values = ["/test*"]
   }
 }
 

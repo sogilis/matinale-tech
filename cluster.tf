@@ -1,12 +1,24 @@
+# the ECS cluster. ECS is the cluster scheduler service provided by AWS.
+# unlike some of its competitor, it could only work with docker based
+# applications. However, it is easy to start, easy to run (thanks to managed service !)
+# and integrate well with other AWS services.
+
 resource "aws_ecs_cluster" "matinale-tech" {
   name = "ecs-cluster-for-matinale-tech"
 }
 
-
+# ECR is the container repository for AWS
 resource "aws_ecr_repository" "matinale-tech" {
   name = "matinale-tech"
 }
 
+# Here are the task definition. Basically, a task is a programm that will run
+# on the cluster. Could be run as deamon, as one shot or recurrent task ...
+# It contains description of the container, of its configuration and of its
+# resources requirement (cpu / ram)
+# we can express placement restriction : for exemple, if your task need to have
+# hightly performant CPU, GPU computation or optimized IO/ps you can choose the
+# kind of ec2 instance your task should run on.
 data "template_file" "production-mat-tech" {
   template = "${file("templates/mat_tech_container_definition.tpl")}"
 
@@ -30,11 +42,6 @@ data "template_file" "test-mat-tech" {
 resource "aws_ecs_task_definition" "matinale-tech-production" {
   family                = "matinale-tech-prod"
   container_definitions = "${data.template_file.production-mat-tech.rendered}"
-
-  placement_constraints {
-    type       = "memberOf"
-    expression = "attribute:ecs.availability-zone in [eu-west-1a, eu-west-1b, eu-west-1c]"
-  }
 }
 
 resource "aws_ecs_task_definition" "matinale-tech-test" {
@@ -42,7 +49,10 @@ resource "aws_ecs_task_definition" "matinale-tech-test" {
   container_definitions = "${data.template_file.test-mat-tech.rendered}"
 }
 
-
+# On ecs, a service is a way to schedule task as a service.
+# here is defined the number of instance the service should have,
+# the placement strategie of task on the cluster, the laod balancer where
+# the ecs scheduler should register new service instance, etc ...
 resource "aws_ecs_service" "production" {
   name            = "mat-tech-prod"
   cluster         = "${aws_ecs_cluster.matinale-tech.id}"

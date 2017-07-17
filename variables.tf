@@ -7,7 +7,7 @@ variable "production_version" {
 
 variable "test_version" {
   type    = "string"
-  default = "1"
+  default = "2"
 }
 
 variable "nb_production_task" {

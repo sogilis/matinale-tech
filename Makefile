@@ -5,7 +5,7 @@ VERSION 		:= $(shell git rev-parse --short HEAD)
 ARCH			= amd64
 OS				= linux
 LD_FLAGS		= -ldflags "-X main.version=$(VERSION)"
-IMAGE_TAG		= 2
+IMAGE_TAG		= 1
 IMAGE_NAME 		= matinale-tech
 CONTAINER_NAME 	= matinale-tech
 REGISTRY		= 808017386784.dkr.ecr.eu-west-1.amazonaws.com

@@ -15,7 +15,7 @@ func main() {
 	flag.Parse()
 	mux := http.NewServeMux()
 	mux.HandleFunc(fmt.Sprintf("/%s", *env), func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Je suis en version 1"))
+		w.Write([]byte("Je suis en erreur !"))
 	})
 	mux.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)

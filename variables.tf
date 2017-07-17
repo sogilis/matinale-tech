@@ -17,10 +17,10 @@ variable "nb_production_task" {
 
 variable "nb_test_task" {
   type    = "string"
-  default = "0"
+  default = "3"
 }
 
 variable "desired_capacity" {
   type    = "string"
-  default = "0"
+  default = "3"
 }

@@ -5,4 +5,8 @@ rendre container et orchestrateurs pour la phase de mise en production.
 
 ## architecture
 
+Déploiement, surveillance, contrôle des services ECS et leurs enregistrement sur le l'équilibreur de charge.
+
 ![Services ECS](img/matinale_tech_ecs_services.png)
+
+Routage des requetes 

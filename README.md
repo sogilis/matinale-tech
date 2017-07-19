@@ -39,8 +39,12 @@ Routage des requetes clients vers les conteneurs :
 
 ## Mise en route
 
+### Go
+La premiere chose a faire est d'installer [Go](https://golang.org/dl/), de suivre [les instructions](https://golang.org/doc/install) et 
+de cloner ce depot sous $GOPATH/src/github.com/sogilis/
+
 ### AWS
-Il vous faudra tout d'abord utiliser un compte sur AWS. Si vous n'en avez pas, vous pouvez en
+Il vous faudra ensuite utiliser un compte sur AWS. Si vous n'en avez pas, vous pouvez en
  [créer un](https://aws.amazon.com/free/?sc_channel=PS&sc_campaign=acquisition_FR&sc_publisher=google&sc_medium=english_cloud_computing_b&sc_content=aws_account_e&sc_detail=create%20aws%20account&sc_category=cloud_computing&sc_segment=85348026051&sc_matchtype=e&sc_country=FR&s_kwcid=AL!4422!3!85348026051!e!!g!!create%20aws%20account&ef_id=VTpYTAAABHU391SK:20170718132046:s).
 Un fois ceci fait, 
 Enfin il vous faudra créer un utilisateur avec des permissions d'administrateur et un accès par clé privé. Conservez precieusement cette le secret associé a la clé car vous ne pouvez le récupérer qu'une seule fois : lors de la création de la clé. 

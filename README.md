@@ -39,11 +39,15 @@ Routage des requetes clients vers les conteneurs :
 
 ## Mise en route
 
-### Go
+Pour mettre en oeuvre cette démonstration, vous aurez besoin de Go, d'un compte AWS, de terraform, de Make et Docker.
+
+### Installation des prérequis
+
+#### Go
 La premiere chose a faire est d'installer [Go](https://golang.org/dl/), de suivre [les instructions](https://golang.org/doc/install) et 
 de cloner ce depot sous $GOPATH/src/github.com/sogilis/
 
-### AWS
+#### AWS
 Il vous faudra ensuite utiliser un compte sur AWS. Si vous n'en avez pas, vous pouvez en
  [créer un](https://aws.amazon.com/free/?sc_channel=PS&sc_campaign=acquisition_FR&sc_publisher=google&sc_medium=english_cloud_computing_b&sc_content=aws_account_e&sc_detail=create%20aws%20account&sc_category=cloud_computing&sc_segment=85348026051&sc_matchtype=e&sc_country=FR&s_kwcid=AL!4422!3!85348026051!e!!g!!create%20aws%20account&ef_id=VTpYTAAABHU391SK:20170718132046:s).
 Un fois ceci fait, 
@@ -69,15 +73,15 @@ region = eu-west-1
 ```
 
 NOTE: les resources AWS utilisés ici sont soit gratuite (si l'on bénéficie de l'offre gratuite AWS de 12 mois) soit très peu chère.
-Néanmoins, il est recommander de supprimer toute l'infrastructure a l'aide de la commande `~$ terraform destroy`
+Néanmoins, il est nécessaire de supprimer toute l'infrastructure a la fin avec l'aide de la commande `~$ terraform destroy`
 
-### Terraform
-Terraform est l'outil utilisé pour créer toute l'infrastructure. Il est nécessaire de [l'installer](https://www.terraform.io/intro/getting-started/install.html).
+#### Terraform
+Terraform est l'outil utilisé pour créer toute l'infrastructure. Il faut donc [l'installer](https://www.terraform.io/intro/getting-started/install.html).
 
 Une fois ceci fait, tapez la commande `~$ terraform plan`. Si votre compte AWS, la cli AWS et terraform sont correctement installés, vous aurez
 une simulation de la création de l'infrastructure.
 
-### Docker et make
+#### Docker et make
 Il ne vous manque que [docker](https://store.docker.com/search?type=edition&offering=community) et [make](https://www.gnu.org/software/make/).
  
 ### le deploiement

@@ -1,0 +1,5 @@
+# exclude the binary
+matinale-tech
+
+# exclude tfstate
+*.tfstate*

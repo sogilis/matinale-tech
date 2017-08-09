@@ -13,15 +13,16 @@ var (
 
 func main() {
 	flag.Parse()
-	mux := http.NewServeMux()
-	mux.HandleFunc(fmt.Sprintf("/%s", *env), func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Je suis en version 1"))
-	})
-	mux.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("starting a %s instance\n", *env)
+	http.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 	})
-	h := &http.Server{Addr: ":80", Handler: mux}
+
+	fs := http.FileServer(http.Dir("www/"))
+	prefix := fmt.Sprintf("/%s/", *env)
+	http.Handle(prefix, http.StripPrefix(prefix, fs))
+	http.Handle("/", fs)
 	fmt.Printf("Listening on http://0.0.0.0%s\n", ":80")
-	err := h.ListenAndServe()
+	err := http.ListenAndServe(":80", nil)
 	fmt.Println("leaving now the server : " + err.Error())
 }

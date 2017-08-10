@@ -61,8 +61,13 @@ drun:
 
 drestart: drun
 
+dstart:
+	make dstop
+	make dbuild
+	docker run -d $(PORTS) $(HOSTS) --name ${CONTAINER_NAME} $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)
+
 dbash:
-	docker exec -it $(CONTAINER_NAME) /bin/bash
+	docker exec -it $(CONTAINER_NAME) /bin/sh
 
 dstop:
 	-docker stop $(CONTAINER_NAME)

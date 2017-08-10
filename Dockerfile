@@ -7,6 +7,7 @@ ENV APP_NAME cyclope-api
 WORKDIR /app
 
 COPY matinale-tech /app/
+COPY www /app/www/
 
 EXPOSE 80
 

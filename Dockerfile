@@ -1,5 +1,5 @@
 # Base image
-FROM alpine:latest
+FROM debian:latest
 MAINTAINER Sogilis
 
 WORKDIR /app
@@ -9,4 +9,4 @@ COPY www /app/www/
 
 EXPOSE 80
 
-#ENTRYPOINT /app/matinale-tech
+ENTRYPOINT /app/matinale-tech

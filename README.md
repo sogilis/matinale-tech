@@ -1,6 +1,6 @@
-# matinale-tech
+# Intro
 
-Le but de la démonstration de cette matinale technique est d'avoir un apercu des services que peuvent
+Le but de cet exemple est d'avoir un apercu des services que peuvent
 rendre automatisation, container et orchestrateurs pour la phase de mise en production.
 
 Nous avons donc un petit applicatif pour lequel on va réaliser une montée de version avec une variante du déploiement [blue/green](https://martinfowler.com/bliki/BlueGreenDeployment.html).
@@ -8,8 +8,8 @@ Nous avons donc un petit applicatif pour lequel on va réaliser une montée de v
 Le déploiement va se dérouler de la facon suivante :
 
 - Enregistrement dans un store privé de la nouvelle version de l'applicatif
-- Déploiement de cette version sur le meme cluster que la version en production mais accessible uniquement
- a partir d'un chemin alternatif. Les utilisateurs finaux n'y ont pas accès.
+- Déploiement de cette version sur le même cluster que la version en production mais accessible uniquement
+ à partir d'un chemin alternatif. Les utilisateurs finaux n'y ont pas accès.
 - Test de cette nouvelle version.
 - Correction de cette nouvelle version.
 - Mise à disposition des utilisateurs finaux de la nouvelle version corrigée.
@@ -87,7 +87,7 @@ Il ne vous manque que [docker](https://store.docker.com/search?type=edition&offe
 ### le deploiement
 Pour la créer, executer la commande `~$ terraform apply`.
 Super ! votre infrastructure fonctionne. Mais aucune application ne tourne encore dessus.
-Pour remedier a ca :
+Pour remédier à ça :
  - configurez la variable d'environnement AWS_DEFAULT_PROFILE : `~$ export AWS_DEFAULT_PROFILE=terraform`
  - connectez vous au repository docker privé de votre infrastructure. Pour cela, il faut coller le retour de la commande `~$ aws ecr get-login` dans le terminal et l'éxecuter
  - construisez votre image docker: `~$ make dbuild`
@@ -96,7 +96,33 @@ Pour remedier a ca :
 Votre application est désormais déployé (compter quelque 20 - 30 secondes avant de pouvoir y acceder).
 Vous pouvez obtenir le DNS du point d'entrée de l'application avec la commande `~$ terraform output entry_point_production`.
 
-## [Suite](https://github.com/sogilis/matinale-tech/blob/version-2-failure/README.md)
+# Suite
 
+Trois autres branches sont disponibles:
+
+## version-2-failure
+
+Permet de deployer une version 2 du service accessible en ajoutant `/test` à l'URL sur laquelle l'application est disponible.
+Cette version présente un problème, mais les utilisateur finaux ne sont pas impactées.
+
+Pour jouer ce scénario, il faut builder puis déployer la nouvelle version et mettre à jour l'infrastructure, à savoir éxécuter les commandes :
+
+ - `$ make dbuild`
+ - `$ make dpush`
+ - `$ terraform apply`
+
+## version-2-ok
+
+On va ici déployer sous `/test` la version 2 corrigée.
+Pour jouer ce scénario, il faut builder puis déployer la nouvelle version et mettre à jour l'infrastructure, à savoir éxécuter les commandes :
+
+ - `$ make dbuild`
+ - `$ make dpush`
+ - `$ terraform apply`
+
+## deploy-v2-prod
+
+Cette dernière étape consiste à mettre à jour la version 'de production'.
+Pour jouer ce scénario, un simple `$ terraform apply`.
 
 Pour plus d'information vous pouvez consulter la [documentation AWS](https://aws.amazon.com/) et [terraform](https://www.terraform.io/docs/index.html)
